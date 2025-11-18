@@ -1,0 +1,9 @@
+use-conda: True
+
+
+default-resources:
+# Max memory available on system in GB
+  memory: 64
+
+set-threads:
+  fastp: 16
