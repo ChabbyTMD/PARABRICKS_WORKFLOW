@@ -1,6 +1,7 @@
 rule pb_germline:
     input:
         reference=config["reference"],
+        fastq=lambda wildcards: get_fastp_outputs(wildcards),
     output:
         bam = "results/BAMs/{sample}.bam",
         vcf = temp("results/VCFs/{sample}.vcf"),

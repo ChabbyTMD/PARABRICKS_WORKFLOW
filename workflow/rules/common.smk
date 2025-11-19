@@ -77,3 +77,14 @@ def parabricks_output(wildcards):
     output.extend(expand("results/BAMs/{sample}.bam", sample=unique_samples))
     output.extend(expand("results/VCFs/{sample}.vcf.gz", sample=unique_samples))
     return output
+
+def get_fastp_outputs(wildcards):
+    """Get all fastp output files for a sample as input to pb_germline."""
+    sample_data = samples[samples["sample"] == wildcards.sample]
+    fq_files = []
+    
+    for _, row in sample_data.iterrows():
+        fq_files.append(f"results/fastp_output/{row['sample']}/{row['sample']}_{row['lane']}_R1.fastq.gz")
+        fq_files.append(f"results/fastp_output/{row['sample']}/{row['sample']}_{row['lane']}_R2.fastq.gz")
+    
+    return fq_files
