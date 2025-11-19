@@ -1,6 +1,6 @@
 rule pb_germline:
     input:
-        reference=reference,
+        reference=config["reference"],
     output:
         bam = "results/BAMs/{sample}.bam",
         vcf = temp("results/VCFs/{sample}.vcf"),
