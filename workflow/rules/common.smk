@@ -73,6 +73,7 @@ def parabricks_output(wildcards):
     All expected output files from Parabricks workflow.
     """
     output = []
-    output.extend(expand("results/BAMs/{sample}.bam", sample=samples["sample"]).unique().tolist())
-    output.extend(expand("results/VCFs/{sample}.vcf.gz", sample=samples["sample"]).unique().tolist())
+    unique_samples = samples["sample"].unique()
+    output.extend(expand("results/BAMs/{sample}.bam", sample=unique_samples))
+    output.extend(expand("results/VCFs/{sample}.vcf.gz", sample=unique_samples))
     return output
