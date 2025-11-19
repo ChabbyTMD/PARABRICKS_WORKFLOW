@@ -3,4 +3,4 @@ use-conda: True
 local-cores: 16
 
 set-threads:
-  - fastp: 16
+  - fastp = 16
