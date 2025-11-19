@@ -1,3 +1,22 @@
+rule fastq_symlinks:
+    input:
+        unpack(raw_fastq_files)
+    output:
+        R1="results/fastq_input/{sample}/{lane}_R1.fastq.gz",
+        R2="results/fastq_input/{sample}/{lane}_R2.fastq.gz"
+    log:
+        "logs/fastq_input/{sample}/{sample}_{lane}.log"
+    benchmark:
+        "benchmarks/fastq_input/{sample}/{sample}_{lane}.txt"
+    shell:
+        """
+        mkdir -p results/fastq_input/{wildcards.sample}
+        ln -sf {input.R1} {output.R1}
+        ln -sf {input.R2} {output.R2}
+        echo "Linked {input.R1} -> {output.R1}" > {log}
+        echo "Linked {input.R2} -> {output.R2}" >> {log}
+        """
+
 rule fastp:
     input:
         unpack(fastp_input),

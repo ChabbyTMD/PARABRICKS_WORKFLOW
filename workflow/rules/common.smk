@@ -5,6 +5,7 @@ import string
 import json
 import pandas as pd
 from pathlib import Path
+from snakemake.exceptions import WorkflowError
 
 
 
@@ -34,25 +35,25 @@ def parse_sample_sheet(config):
 #     return " \\\n    ".join(fq_params)
 
 
+def raw_fastq_files(wildcards):
+    """Return original raw FASTQ file paths for a sample/lane with validation."""
+    lane_row = samples[(samples["sample"] == wildcards.sample) & (samples["lane"] == wildcards.lane)]
+    if lane_row.empty:
+        raise WorkflowError(f"No entry found in samplesheet for sample {wildcards.sample} lane {wildcards.lane}")
+    if not {"fq1", "fq2"}.issubset(lane_row.columns):
+        raise WorkflowError("samplesheet must contain fq1 and fq2 columns")
+    R1 = lane_row.fq1.iloc[0]
+    R2 = lane_row.fq2.iloc[0]
+    if not (os.path.exists(R1) and os.path.exists(R2)):
+        raise WorkflowError(f"Raw FASTQ files missing for sample {wildcards.sample} lane {wildcards.lane}: {R1}, {R2}")
+    return {"R1": R1, "R2": R2}
+
 def fastp_input(wildcards):
-    """
-    Get all raw fq1 and fq2 files for a given sample as input to fastp rule.
-    """
-    lane = samples.loc[samples["lane"] == wildcards.lane]
-    R1 = f"results/fastq_input/{wildcards.sample}/{wildcards.lane}_R1.fastq.gz"
-    R2 = f"results/fastq_input/{wildcards.sample}/{wildcards.lane}_R2.fastq.gz"
-    if "fq1" in samples.columns and "fq2" in samples.columns:
-        if lane["fq1"].notnull().any() and lane["fq2"].notnull().any():
-            R1 = lane.fq1.item()
-            R2 = lane.fq2.item()
-            if os.path.exists(R1) and os.path.exists(R2):
-                return {"R1": R1, "R2": R2}
-            else:
-                raise WorkflowError(f"FASTQ files for sample {wildcards.sample}, lane {wildcards.lane} do not exist: {R1}, {R2}")
-        else:
-            return {"R1": R1, "R2": R2}
-    else:
-        return {"R1": R1, "R2": R2}
+    """Always return symlink paths to be generated for fastp input."""
+    return {
+        "R1": f"results/fastq_input/{wildcards.sample}/{wildcards.lane}_R1.fastq.gz",
+        "R2": f"results/fastq_input/{wildcards.sample}/{wildcards.lane}_R2.fastq.gz",
+    }
 
 def pb_germline_fq_files(wildcards):
     """
