@@ -29,7 +29,7 @@ rule fastp:
     benchmark:
         "benchmarks/fastp/{sample}/{sample}_{lane}.txt",
     conda:
-        "workflow/envs/fastp.yaml"
+        "../envs/fastp.yaml"
     shell:
         """
         fastp --in1 {input.R1} --in2 {input.R2} \
