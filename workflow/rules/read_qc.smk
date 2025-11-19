@@ -28,6 +28,8 @@ rule fastp:
         "logs/fastp/{sample}/{sample}_{lane}.log",
     benchmark:
         "benchmarks/fastp/{sample}/{sample}_{lane}.txt",
+    conda:
+        "envs/fastp.yaml"
     shell:
         """
         fastp --in1 {input.R1} --in2 {input.R2} \
