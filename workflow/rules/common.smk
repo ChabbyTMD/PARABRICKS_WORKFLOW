@@ -36,10 +36,16 @@ def parse_sample_sheet(config):
 
 
 def raw_fastq_files(wildcards):
-    """Return original raw FASTQ file paths for a sample/lane with validation."""
-    lane_row = samples[(samples["sample"] == wildcards.sample) & (samples["lane"] == wildcards.lane)]
+    """Return original raw FASTQ file paths for a sample/lane with validation.
+
+    Handles potential type mismatches between numeric lane column and string wildcard.
+    """
+    lane_row = samples[(samples["sample"].astype(str) == str(wildcards.sample)) & (samples["lane"].astype(str) == str(wildcards.lane))]
     if lane_row.empty:
-        raise WorkflowError(f"No entry found in samplesheet for sample {wildcards.sample} lane {wildcards.lane}")
+        available = ",".join(sorted(samples[samples["sample"].astype(str) == str(wildcards.sample)]["lane"].astype(str).unique()))
+        raise WorkflowError(
+            f"No entry found in samplesheet for sample {wildcards.sample} lane {wildcards.lane}. Available lanes for sample: {available if available else 'NONE'}"
+        )
     if not {"fq1", "fq2"}.issubset(lane_row.columns):
         raise WorkflowError("samplesheet must contain fq1 and fq2 columns")
     R1 = lane_row.fq1.iloc[0]
