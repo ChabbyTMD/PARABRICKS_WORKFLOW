@@ -7,7 +7,7 @@ rule pb_germline:
      Performance tuning options specified in this rule
     --gpuwrite             Use one GPU to accelerate writing final BAM/CRAM.
     --gpusort              Use GPUs to accelerate sorting and marking.
-    --run-partition        Divide the whole genome into multiple partitions and run multiple processes at the same time, each on one partition.
+    --run-partition        Divide the whole genome into multiple partitions and run multiple processes at the same time, each on one partition. This can only be ran on multiple GPUS at least 2 and from then on, multiples of 2.
     """
     input:
         reference=config["reference"],
@@ -33,7 +33,6 @@ rule pb_germline:
             --memory-limit {resources.memory} \
             --gpusort \
             --gpuwrite \
-            --run-partition
         """
 
 rule vcf_compress:
