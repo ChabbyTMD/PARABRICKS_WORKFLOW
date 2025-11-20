@@ -9,3 +9,6 @@ prototype.ipynb
 .vscode/
 Dockerfile
 .dockerignore
+benchmarks/
+logs/
+results/
