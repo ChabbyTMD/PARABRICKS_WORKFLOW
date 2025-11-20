@@ -1,4 +1,14 @@
 rule pb_germline:
+    """
+    Run the Parabricks Germline Variant Calling Pipeline using the filtered FASTQ files from fastp as input. Can work with single or multiple lanes per sample.
+    Outputs per-sample BAM and VCF files.
+
+    #TODO: Implement haplotyper caller options
+     Performance tuning options specified in this rule
+    --gpuwrite             Use one GPU to accelerate writing final BAM/CRAM.
+    --gpusort              Use GPUs to accelerate sorting and marking.
+    --run-partition        Divide the whole genome into multiple partitions and run multiple processes at the same time, each on one partition.
+    """
     input:
         reference=config["reference"],
         fastq=lambda wildcards: get_fastp_outputs(wildcards),
@@ -20,7 +30,10 @@ rule pb_germline:
             --out-variants {output.vcf} \
             --logfile {log} \
             --verbose \
-            --memory-limit {resources.memory}
+            --memory-limit {resources.memory} \
+            --gpusort \
+            --gpuwrite \
+            --run-partition
         """
 
 rule vcf_compress:
@@ -28,6 +41,8 @@ rule vcf_compress:
         vcf_in = "results/VCFs/{sample}.vcf"
     output:
         vcf_out = "results/VCFs/{sample}.vcf.gz"
+    conda:
+        "../envs/htslib.yaml"
     shell:
         """
         bgzip {input.vcf_in} > {output.vcf_out}
