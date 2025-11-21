@@ -44,5 +44,5 @@ rule vcf_compress:
         "../envs/htslib.yaml"
     shell:
         """
-        bgzip {input.vcf_in} > {output.vcf_out}
+        bgzip -f {input.vcf_in} > {output.vcf_out}
         """
