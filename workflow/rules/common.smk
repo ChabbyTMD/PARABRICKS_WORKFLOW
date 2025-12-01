@@ -11,28 +11,12 @@ from snakemake.exceptions import WorkflowError
 
 def parse_sample_sheet(config):
     """Parse sample sheet CSV file."""
-    return pd.read_csv(config["samplesheet"])
-
-
-# def get_fq_params(wildcards):
-#     """
-#     Extract all fq1 and fq2 file pairs for a given sample and format them
-#     as --in-fq parameters for pb_germline rule.
     
-#     Args:
-#         wildcards: Snakemake wildcards object containing 'sample'
-#         samples: DataFrame from parse_sample_sheet
+    samplesheet_path = config["samplesheet"]
+    if not os.path.exists(samplesheet_path):
+        raise WorkflowError(f"Sample sheet file not found: {samplesheet_path}")
     
-#     Returns:
-#         String of formatted --in-fq parameters for all lanes of the sample
-#     """
-#     sample_data = samples[samples["sample"] == wildcards.sample]
-#     fq_params = []
-    
-#     for _, row in sample_data.iterrows():
-#         fq_params.append(f"--in-fq {row['fq1']} {row['fq2']}")
-    
-#     return " \\\n    ".join(fq_params)
+    return pd.read_csv(samplesheet_path)
 
 
 def raw_fastq_files(wildcards):
@@ -74,17 +58,6 @@ def pb_germline_fq_files(wildcards):
     return " \\\n    ".join(fq_params)
 
 
-
-def parabricks_output(wildcards):
-    """
-    All expected output files from Parabricks workflow.
-    """
-    output = []
-    unique_samples = samples["sample"].unique()
-    output.extend(expand("results/BAMs/{sample}.bam", sample=unique_samples))
-    output.extend(expand("results/VCFs/{sample}.vcf.gz", sample=unique_samples))
-    return output
-
 def get_fastp_outputs(wildcards):
     """Get all fastp output files for a sample as input to pb_germline."""
     sample_data = samples[samples["sample"] == wildcards.sample]
@@ -95,3 +68,15 @@ def get_fastp_outputs(wildcards):
         fq_files.append(f"results/fastp_output/{row['sample']}/{row['sample']}_{row['lane']}_R2.fastq.gz")
     
     return fq_files
+
+
+def parabricks_output(wildcards):
+    """
+    All expected output files from Parabricks workflow.
+    """
+    output = []
+    unique_samples = samples["sample"].unique()
+    output.extend(expand("results/BAMs/{sample}.bam", sample=unique_samples))
+    output.extend(expand("results/VCFs/{sample}.vcf.gz", sample=unique_samples))
+    return output
+    
