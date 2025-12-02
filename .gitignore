@@ -12,3 +12,5 @@ Dockerfile
 benchmarks/
 logs/
 results/
+pb_pod.yaml
+snakemake-env.yaml
