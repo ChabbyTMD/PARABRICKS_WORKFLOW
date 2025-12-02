@@ -37,7 +37,7 @@ rule pb_germline:
 
 rule vcf_compress:
     input:
-        vcf_in = "results/VCFs/{sample}.vcf"
+        vcf_in = "results/VCFs/{sample}.fixed.vcf"
     output:
         vcf_out = "results/VCFs/{sample}.vcf.gz"
     conda:
@@ -45,4 +45,17 @@ rule vcf_compress:
     shell:
         """
         bgzip -f {input.vcf_in} > {output.vcf_out}
+        """
+
+rule vcf_fix_header:
+    """
+    Replace the generic entry "sample" with sample ID in the VCF header.
+    """
+    input:
+        vcf_in = "results/VCFs/{sample}.vcf"
+    output:
+        vcf_out = "results/VCFs/{sample}.fixed.vcf"
+    shell:
+        """
+        awk 'BEGIN{OFS="\t"} /^#CHROM/{$NF = "{wildcards.sample}"; print; next} {print}' {input.vcf_in} > {output.vcf_out}
         """
