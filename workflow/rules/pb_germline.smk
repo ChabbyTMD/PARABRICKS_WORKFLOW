@@ -73,7 +73,7 @@ rule merge_vcfs:
     Merge all per-sample VCFs into a single multi-sample VCF using bcftools merge.
     """
     input:
-        vcfs = get_all_sample_vcfs()
+        vcfs = lambda wildcards: get_all_sample_vcfs(wildcards),
     output:
         merged_vcf = "results/VCFs/merged_samples.vcf.gz",
         merged_index = "results/VCFs/merged_samples.vcf.gz.tbi"
