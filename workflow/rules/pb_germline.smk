@@ -1,3 +1,6 @@
+ruleorder:
+    pb_germline > vcf_fix_header
+    
 rule pb_germline:
     """
     Run the Parabricks Germline Variant Calling Pipeline using the filtered FASTQ files from fastp as input. Can work with single or multiple lanes per sample.
