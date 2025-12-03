@@ -1,5 +1,5 @@
 ruleorder:
-    pb_germline > vcf_fix_header
+    pb_germline > vcf_fix_header > vcf_sort_index
 
 rule pb_germline:
     """
