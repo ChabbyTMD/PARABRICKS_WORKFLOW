@@ -6,3 +6,4 @@ default-resources:
 
 set-threads:
   fastp: 16
+  pb_germline: 16
