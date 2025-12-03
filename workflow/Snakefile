@@ -14,4 +14,4 @@ reference = config["reference"]
 
 rule all:
     input:
-        parabricks_output
+        parabricks_output()
