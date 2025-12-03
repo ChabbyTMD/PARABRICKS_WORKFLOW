@@ -44,8 +44,8 @@ rule vcf_sort_index:
     input:
         vcf = "results/VCFs/{sample}.fixed.vcf"
     output:
-        vcf_sorted = temp("results/VCFs/{sample}.sorted.vcf.gz"),
-        vcf_index = temp("results/VCFs/{sample}.sorted.vcf.gz.tbi")
+        vcf_sorted = "results/VCFs/{sample}.sorted.vcf.gz",
+        vcf_index = "results/VCFs/{sample}.sorted.vcf.gz.tbi"
     conda:
         "../envs/htslib.yaml"
     shell:
@@ -62,7 +62,7 @@ rule vcf_fix_header:
     input:
         vcf_in = "results/VCFs/{sample}.vcf"
     output:
-        vcf_out = "results/VCFs/{sample}.fixed.vcf"
+        vcf_out = temp("results/VCFs/{sample}.fixed.vcf")
     shell:
         """
         awk 'BEGIN{{OFS="\t"}} /^#CHROM/{{$NF = "{wildcards.sample}"; print; next}} {{print}}' {input.vcf_in} > {output.vcf_out}
