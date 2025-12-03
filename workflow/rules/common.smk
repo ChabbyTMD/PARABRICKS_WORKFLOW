@@ -83,7 +83,6 @@ def parabricks_output(wildcards):
     output = []
     unique_samples = samples["sample"].unique()
     output.extend(expand("results/BAMs/{sample}.bam", sample=unique_samples))
-    output.extend(expand("results/VCFs/{sample}.vcf.gz", sample=unique_samples))
     output.extend("results/VCFs/merged_samples.vcf.gz")
     return output
     
