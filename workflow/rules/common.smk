@@ -70,6 +70,12 @@ def get_fastp_outputs(wildcards):
     return fq_files
 
 
+def get_all_sample_vcfs():
+    """Get all sample VCF files for merging."""
+    unique_samples = samples["sample"].unique()
+    return expand("results/VCFs/{sample}.sorted.vcf.gz", sample=unique_samples)
+
+
 def parabricks_output(wildcards):
     """
     All expected output files from Parabricks workflow.

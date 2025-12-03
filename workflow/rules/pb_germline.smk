@@ -73,7 +73,7 @@ rule merge_vcfs:
     Merge all per-sample VCFs into a single multi-sample VCF using bcftools merge.
     """
     input:
-        vcfs = expand("results/VCFs/{sample}.sorted.vcf.gz", sample=samples["sample"].unique())
+        vcfs = get_all_sample_vcfs()
     output:
         merged_vcf = "results/VCFs/merged_samples.vcf.gz",
         merged_index = "results/VCFs/merged_samples.vcf.gz.tbi"
