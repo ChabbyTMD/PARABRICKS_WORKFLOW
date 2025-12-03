@@ -34,18 +34,25 @@ rule pb_germline:
             --gpusort \
             --gpuwrite \
         """
-
-rule vcf_compress:
+# TODO: sort and index sample vcf files
+rule vcf_sort_index:
+    """
+    Sort VCF file with bcftools and index with tabix.
+    """
     input:
-        vcf_in = "results/VCFs/{sample}.fixed.vcf"
+        vcf = "results/VCFs/{sample}.fixed.vcf"
     output:
-        vcf_out = "results/VCFs/{sample}.vcf.gz"
+        vcf_sorted = temp("results/VCFs/{sample}.sorted.vcf.gz"),
+        vcf_index = temp("results/VCFs/{sample}.sorted.vcf.gz.tbi")
     conda:
         "../envs/htslib.yaml"
     shell:
         """
-        bgzip -f {input.vcf_in} > {output.vcf_out}
+        bcftools sort {input.vcf} -Oz -o {output.vcf_sorted}
+        tabix -p vcf {output.vcf_sorted}
         """
+
+
 
 rule vcf_fix_header:
     """
@@ -57,5 +64,24 @@ rule vcf_fix_header:
         vcf_out = "results/VCFs/{sample}.fixed.vcf"
     shell:
         """
-        awk 'BEGIN{OFS="\t"} /^#CHROM/{$NF = "{wildcards.sample}"; print; next} {print}' {input.vcf_in} > {output.vcf_out}
+        awk 'BEGIN{{OFS="\t"}} /^#CHROM/{{$NF = "{wildcards.sample}"; print; next}} {{print}}' {input.vcf_in} > {output.vcf_out}
+        """
+
+# TODO: Implement rule to merge all sample VCFs into one multi-sample VCF
+
+rule merge_vcfs:
+    """
+    Merge all per-sample VCFs into a single multi-sample VCF using bcftools merge.
+    """
+    input:
+        vcfs = expand("results/VCFs/{sample}.sorted.vcf.gz")
+    output:
+        merged_vcf = "results/VCFs/merged_samples.vcf.gz",
+        merged_index = "results/VCFs/merged_samples.vcf.gz.tbi"
+    conda:
+        "../envs/htslib.yaml"
+    shell:
+        """
+        bcftools merge {input.vcfs} -Oz -o {output.merged_vcf}
+        tabix -p vcf {output.merged_vcf}
         """
