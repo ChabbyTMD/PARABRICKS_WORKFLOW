@@ -57,7 +57,7 @@ def pb_germline_fq_files(wildcards):
             f"--in-fq results/fastp_output/{row['sample']}/{row['sample']}_{row['lane']}_R1.fastq.gz results/fastp_output/{row['sample']}/{row['sample']}_{row['lane']}_R2.fastq.gz"
         )
 
-    return " \\\n+    ".join(fq_params)
+    return " \\\n    ".join(fq_params)
 
 
 # def get_fastp_outputs(wildcards):
