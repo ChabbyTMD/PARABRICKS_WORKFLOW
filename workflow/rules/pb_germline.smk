@@ -53,7 +53,6 @@ rule vcf_sort_index:
         """
 
 
-
 rule vcf_fix_header:
     """
     Replace the generic entry "sample" with sample ID in the VCF header.
@@ -74,7 +73,7 @@ rule merge_vcfs:
     Merge all per-sample VCFs into a single multi-sample VCF using bcftools merge.
     """
     input:
-        vcfs = expand("results/VCFs/{sample}.sorted.vcf.gz")
+        vcfs = expand("results/VCFs/{sample}.sorted.vcf.gz", sample=samples["sample"].unique())
     output:
         merged_vcf = "results/VCFs/merged_samples.vcf.gz",
         merged_index = "results/VCFs/merged_samples.vcf.gz.tbi"
