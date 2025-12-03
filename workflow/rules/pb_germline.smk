@@ -1,6 +1,6 @@
 ruleorder:
     pb_germline > vcf_fix_header
-    
+
 rule pb_germline:
     """
     Run the Parabricks Germline Variant Calling Pipeline using the filtered FASTQ files from fastp as input. Can work with single or multiple lanes per sample.
@@ -14,14 +14,13 @@ rule pb_germline:
     """
     input:
         reference=config["reference"],
-        fastq=lambda wildcards: get_fastp_outputs(wildcards),
     output:
         bam = "results/BAMs/{sample}.bam",
         vcf = temp("results/VCFs/{sample}.vcf"),
     log:
         "logs/pb_germline/{sample}/{sample}_pb_germline.log",
     params:
-        fq_params = lambda wildcards: pb_germline_fq_files(wildcards),
+        fq_params = lambda wildcards: pb_germline_fq_files(),
     benchmark:
         "benchmarks/pb_germline/{sample}.txt",
     shell:
