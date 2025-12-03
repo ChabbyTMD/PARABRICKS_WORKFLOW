@@ -17,6 +17,8 @@ rule pb_germline:
     output:
         bam = "results/BAMs/{sample}.bam",
         vcf = temp("results/VCFs/{sample}.vcf"),
+    wildcard_constraints:
+        sample="[^/.]+"  # Match any characters except forward slash and dot
     log:
         "logs/pb_germline/{sample}/{sample}_pb_germline.log",
     params:
@@ -46,6 +48,8 @@ rule vcf_sort_index:
     output:
         vcf_sorted = "results/VCFs/{sample}.sorted.vcf.gz",
         vcf_index = "results/VCFs/{sample}.sorted.vcf.gz.tbi"
+    wildcard_constraints:
+        sample="[^/.]+"  # Match any characters except forward slash and dot
     conda:
         "../envs/htslib.yaml"
     shell:
@@ -63,6 +67,8 @@ rule vcf_fix_header:
         vcf_in = "results/VCFs/{sample}.vcf"
     output:
         vcf_out = temp("results/VCFs/{sample}.fixed.vcf")
+    wildcard_constraints:
+        sample="[^/.]+"  # Match any characters except forward slash and dot
     shell:
         """
         awk 'BEGIN{{OFS="\t"}} /^#CHROM/{{$NF = "{wildcards.sample}"; print; next}} {{print}}' {input.vcf_in} > {output.vcf_out}
