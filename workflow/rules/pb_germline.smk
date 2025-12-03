@@ -20,7 +20,7 @@ rule pb_germline:
     log:
         "logs/pb_germline/{sample}/{sample}_pb_germline.log",
     params:
-        fq_params = lambda wildcards: pb_germline_fq_files(),
+        fq_params = lambda wildcards: pb_germline_fq_files(wildcards),
     benchmark:
         "benchmarks/pb_germline/{sample}.txt",
     shell:

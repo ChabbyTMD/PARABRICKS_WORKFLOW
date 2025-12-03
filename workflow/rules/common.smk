@@ -45,17 +45,19 @@ def fastp_input(wildcards):
         "R2": f"results/fastq_input/{wildcards.sample}/{wildcards.lane}_R2.fastq.gz",
     }
 
-def pb_germline_fq_files():
+def pb_germline_fq_files(wildcards):
     """
     Extract all QCed fq1 and fq2 file pairs for a given sample as input to pb_germline pipeline.
     """
     sample_data = samples[samples["sample"] == wildcards.sample]
     fq_params = []
-    
+
     for _, row in sample_data.iterrows():
-        fq_params.append(f"--in-fq results/fastp_output/{row['sample']}/{row['sample']}_{row['lane']}_R1.fastq.gz results/fastp_output/{row['sample']}/{row['sample']}_{row['lane']}_R2.fastq.gz")
-    
-    return " \\\n    ".join(fq_params)
+        fq_params.append(
+            f"--in-fq results/fastp_output/{row['sample']}/{row['sample']}_{row['lane']}_R1.fastq.gz results/fastp_output/{row['sample']}/{row['sample']}_{row['lane']}_R2.fastq.gz"
+        )
+
+    return " \\\n+    ".join(fq_params)
 
 
 # def get_fastp_outputs(wildcards):
