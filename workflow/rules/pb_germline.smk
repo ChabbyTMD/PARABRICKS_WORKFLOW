@@ -38,7 +38,7 @@ rule pb_germline:
             --gpusort \
             --gpuwrite \
         """
-# TODO: sort and index sample vcf files
+
 rule vcf_sort_index:
     """
     Sort VCF file with bcftools and index with tabix.
@@ -74,7 +74,6 @@ rule vcf_fix_header:
         awk 'BEGIN{{OFS="\t"}} /^#CHROM/{{$NF = "{wildcards.sample}"; print; next}} {{print}}' {input.vcf_in} > {output.vcf_out}
         """
 
-# TODO: Implement rule to merge all sample VCFs into one multi-sample VCF
 
 rule merge_vcfs:
     """
