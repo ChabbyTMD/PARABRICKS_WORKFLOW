@@ -1,4 +1,4 @@
-# Sample sheet generation user guide.
+# Sample sheet generation user guide
 
 Ensure all your paired-end sequence reads are present in a single directory.
 
