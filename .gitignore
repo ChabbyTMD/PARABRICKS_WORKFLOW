@@ -14,3 +14,13 @@ logs/
 results/
 pb_pod.yaml
 snakemake-env.yaml
+data
+.gitignore
+full_samples.csv
+.gitignore
+data2
+.gitignore
+samplesheet.csv
+samplesheet2.csv
+warnings.txt
+samplesheet_test.csv
