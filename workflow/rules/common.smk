@@ -74,6 +74,7 @@ def parabricks_output():
     """
     output = []
     unique_samples = samples["sample"].unique()
+    output.extend(expand("results/fastp_output/{sample}/{sample}_{lane}_{read}.fastq.gz", sample=unique_samples, lane=samples["lane"].unique(), read=["R1","R2"]))
     output.extend(expand("results/BAMs/{sample}.bam", sample=unique_samples))
     output.append("results/VCFs/merged_samples.vcf.gz")
     return output
