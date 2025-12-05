@@ -10,6 +10,8 @@ This workflow is designed to flexibly feed into germline sequence data from one 
 
 Pull the latest docker image of the workflow [here](https://hub.docker.com/repository/docker/chabbytmd1/parabricks-snakemake/general)
 
+The workflow is present in the `/opt/PARABRICKS-WORKFLOW/` location.
+
 ### Workflow Setup.
 
 Provide the path to an adequately formatted sample sheet to the `samplesheet` directive and the path to the reference genome in the `reference` directive in the [`config/config.yaml`](config/config.yaml) file.
