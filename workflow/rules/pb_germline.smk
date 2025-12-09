@@ -14,6 +14,7 @@ rule pb_germline:
     """
     input:
         reference=config["reference"],
+        fastp_files=get_fastp_outputs_for_sample,
     output:
         bam = "results/BAMs/{sample}.bam",
         vcf = temp("results/VCFs/{sample}.vcf"),
