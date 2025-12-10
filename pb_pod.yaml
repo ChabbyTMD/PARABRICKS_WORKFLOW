@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: parabricks-snakemake
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: parabricks-snakemake
+  template:
+    metadata:
+      labels:
+        app: parabricks-snakemake
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: parabricks-snakemake
+          image: docker.io/chabbytmd1/parabricks-snakemake:v0.6
+          command:
+            - "/bin/bash"
+            - "-c"
+            - |
+              apt-get update -y
+              apt-get install -y curl unzip
+              curl https://rclone.org/install.sh | bash
+              mkdir -p ~/.config/rclone
+              cp /config/rclone/rclone.conf ~/.config/rclone/
+              sleep infinity
+          resources:
+            limits:
+              memory: 64Gi
+              cpu: "4"
+              # Change the number of GPU required (up to 4)
+              nvidia.com/gpu: "1"
+            requests:
+              memory: 64Gi
+              cpu: "4"
+              # Change the number of GPU required (up to 4)
+              nvidia.com/gpu: "1"
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: rclone-config
+              mountPath: /config/rclone/
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: tmugoya-block
+        - name: rclone-config
+          secret:
+            secretName: rclone-config
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: nautilus.io/csu-tide
+                    operator: Exists
+                  - key: nvidia.com/gpu.product
+                    operator: In
+                    values:
+                      - NVIDIA-L40
+      tolerations:
+        - key: nautilus.io/reservation
+          operator: Equal
+          value: csu-tide
+          effect: NoSchedule
