@@ -2,11 +2,12 @@
 set -euo pipefail
 
 # Build a sample sheet CSV (sample,fq1,fq2,lane) from a list of FASTQ paths.
-# Usage: ./build_sample_sheet.sh [input_list_file] [output_csv]
-# Defaults: input_list_file="data" relative to repo root, output_csv="config/samples.csv".
+# Usage: ./build_sample_sheet.sh [input_list_file] [output_csv] [sample_prefix]
+# Defaults: input_list_file="data" relative to repo root, output_csv="config/samples.csv", sample_prefix="22530Aru_".
 
 infile=${1:-data}
 outfile=${2:-config/samples.csv}
+prefix=${3:-22530Aru_}
 
 if [[ ! -f "$infile" ]]; then
   echo "[ERROR] Input list not found: $infile" >&2
@@ -15,7 +16,7 @@ fi
 
 mkdir -p "$(dirname "$outfile")"
 
-awk -v outfile="$outfile" '
+awk -v outfile="$outfile" -v prefix="$prefix" '
   BEGIN {
     FS="\n"
   }
@@ -27,9 +28,12 @@ awk -v outfile="$outfile" '
     n=split(line, parts, "/")
     fname=parts[n]
 
-    # Sample: extract text after "25091Aru_" and up to the next "_".
-    if (match(fname, /25091Aru_/)) {
-      rest=substr(fname, RSTART+9)
+    # Sample: extract text after the specified prefix and up to the next "_".
+    prefix_escaped=prefix
+    gsub(/[.\\[\]{}()*+?|^$]/, "\\&", prefix_escaped)
+    if (match(fname, prefix_escaped)) {
+      prefix_len=length(prefix)
+      rest=substr(fname, RSTART+prefix_len)
       idx=index(rest, "_")
       if (idx > 0) {
         sample=substr(rest, 1, idx-1)
@@ -37,17 +41,20 @@ awk -v outfile="$outfile" '
         sample=rest
       }
     } else {
-      printf "[WARN] Skipping entry without 25091Aru_ prefix: %s\n", line > "/dev/stderr"
+      printf "[WARN] Skipping entry without %s prefix: %s\n", prefix, line > "/dev/stderr"
       next
     }
 
     lane=""
-    if (match(fname, /L00[0-9][0-9]*/)) {
-      lane=substr(fname, RSTART+3, RLENGTH-3)
+    if (match(fname, /L00([0-9]+)/)) {
+      # Extract the lane number from the matched pattern (e.g., "L001" -> "1")
+      lane_match=substr(fname, RSTART+3, RLENGTH-3)
+      # Remove leading zeros to get the actual lane number
+      lane=int(lane_match)
     }
 
-    if (lane !~ /^(1|2|3|4|5|7|8)$/) {
-      printf "[WARN] Skipping entry with unsupported lane format: %s\n", line > "/dev/stderr"
+    if (lane == "") {
+      printf "[WARN] Skipping entry with no lane information: %s\n", line > "/dev/stderr"
       next
     }
 
