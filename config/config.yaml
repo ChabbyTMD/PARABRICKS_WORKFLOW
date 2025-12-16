@@ -1,3 +1,3 @@
-samplesheet: "config/samplesheet2.csv"
+samplesheet: "config/samplesheet3.csv"
 reference: "../HOP_CASCADE_ASSEMBLY/Humulus_lupulus_lupulus_21110M_HAP2_v1.0.fa"
 ref_acc: "NP" 
