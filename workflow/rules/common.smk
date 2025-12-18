@@ -89,7 +89,10 @@ def parabricks_output():
     """
     output = []
     unique_samples = samples["sample"].unique()
-    output.extend(expand("results/fastp_output/{sample}/{sample}_{lane}_{read}.fastq.gz", sample=unique_samples, lane=samples["lane"].unique(), read=["R1","R2"]))
+    # Expand only the sample-lane combinations that exist in the samplesheet
+    for _, row in samples.iterrows():
+        output.append(f"results/fastp_output/{row['sample']}/{row['sample']}_{row['lane']}_R1.fastq.gz")
+        output.append(f"results/fastp_output/{row['sample']}/{row['sample']}_{row['lane']}_R2.fastq.gz")
     output.extend(expand("results/BAMs/{sample}.bam", sample=unique_samples))
     output.append("results/VCFs/merged_samples.vcf.gz")
     return output
