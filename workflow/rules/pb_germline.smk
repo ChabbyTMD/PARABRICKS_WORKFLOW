@@ -11,6 +11,8 @@ rule pb_germline:
     --gpuwrite             Use one GPU to accelerate writing final BAM/CRAM.
     --gpusort              Use GPUs to accelerate sorting and marking.
     --run-partition        Divide the whole genome into multiple partitions and run multiple processes at the same time, each on one partition. This can only be ran on multiple GPUS at least 2 and from then on, multiples of 2.
+    # TODO: Remove Output bam option to save space for large cohorts.
+    # TODO: Make number of GPUs configurable from config file.
     """
     input:
         reference=config["reference"],
@@ -31,11 +33,12 @@ rule pb_germline:
         pbrun germline \
             --ref {input.reference} \
             {params.fq_params} \
-            --out-bam {output.bam} \
+            --out-bam {output.bam} \ 
             --out-variants {output.vcf} \
             --logfile {log} \
             --verbose \
             --memory-limit {resources.memory} \
+            --num-gpus 2 \
             --gpusort \
             --gpuwrite \
         """
