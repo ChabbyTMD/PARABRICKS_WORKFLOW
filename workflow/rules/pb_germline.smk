@@ -33,7 +33,7 @@ rule pb_germline:
         pbrun germline \
             --ref {input.reference} \
             {params.fq_params} \
-            --out-bam {output.bam} \ 
+            --out-bam {output.bam} \
             --out-variants {output.vcf} \
             --logfile {log} \
             --verbose \
