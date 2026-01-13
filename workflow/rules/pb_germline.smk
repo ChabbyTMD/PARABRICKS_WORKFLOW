@@ -41,6 +41,7 @@ rule pb_germline:
             --num-gpus 2 \
             --gpusort \
             --gpuwrite \
+            --run-partition \
         """
 
 rule vcf_sort_index:
