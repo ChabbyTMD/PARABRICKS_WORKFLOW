@@ -8,6 +8,7 @@ configfile: "config/config.yaml"
 include: "rules/common.smk"
 include: "rules/pb_germline.smk"
 include: "rules/read_qc.smk"
+include: "rules/reference.smk"
 
 samples = parse_sample_sheet(config)
 reference = config["reference"]
