@@ -10,8 +10,12 @@ rule index_reference:
         "logs/reference/index_reference.log"
     benchmark:
         "benchmarks/reference/index_reference.txt"
+    params:
+        index_prefix = f"results/reference/{config['ref_acc']}"
     shell:
         """
-        bwa index {input.reference}
+        mkdir -p results/reference
+        bwa index -p {params.index_prefix} {input.reference}
         samtools faidx {input.reference}
+        cp {input.reference}.fai {output.fai}
         """
