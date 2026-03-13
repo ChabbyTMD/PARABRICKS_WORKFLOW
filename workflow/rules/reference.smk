@@ -1,6 +1,6 @@
 rule index_reference:
     input:
-        reference=reference
+        reference=config["reference"]
     output:
         indices = expand("results/reference/{ref_acc}.{ext}", ref_acc=config["ref_acc"], ext=["sa", "pac", "bwt", "ann", "amb"]),
         fai=f"results/reference/{config['ref_acc']}.fai",
