@@ -29,7 +29,7 @@ rule pb_germline:
     shell:
         """
         pbrun germline \
-            --ref {input.reference} \
+            --ref {input.reference}.fasta \
             {params.fq_params} \
             --out-bam {output.bam} \
             --out-variants {output.vcf} \
