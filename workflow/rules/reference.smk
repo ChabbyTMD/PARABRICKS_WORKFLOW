@@ -12,7 +12,7 @@ rule index_reference:
     benchmark:
         "benchmarks/reference/index_reference.txt"
     params:
-        index_prefix = f"results/reference/{config['ref_acc']}"
+        index_prefix = f"results/reference/{config['ref_acc']}.fasta"
     shell:
         """
         mkdir -p results/reference
