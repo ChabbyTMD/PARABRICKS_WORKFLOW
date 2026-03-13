@@ -13,7 +13,7 @@ rule pb_germline:
     --run-partition        Divide the whole genome into multiple partitions and run multiple processes at the same time, each on one partition. This can only be ran on multiple GPUS at least 2 and from then on, multiples of 2.
     """
     input:
-        reference=config["reference"],
+        reference=f"results/reference/{config['ref_acc']}.fasta",
         fastp_files=get_fastp_outputs_for_sample,
     output:
         bam = "results/BAMs/{sample}.bam",
