@@ -5,7 +5,7 @@ rule index_reference:
         indices = expand("results/reference/{ref_acc}.{ext}", ref_acc=config["ref_acc"], ext=["sa", "pac", "bwt", "ann", "amb"]),
         fai="results/reference.fasta.fai",
     conda:
-        "envs/reference.yaml"
+        "../envs/reference.yaml"
     log:
         "logs/reference/index_reference.log"
     benchmark:
