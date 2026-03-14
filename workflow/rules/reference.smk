@@ -14,6 +14,7 @@ rule index_reference:
         ref_prefix = f"results/reference/{config['ref_acc']}"
     shell:
         """
+        mkdir -p results/reference
         mv {input.reference} {params.ref_prefix}.fasta
         bwa index {params.ref_prefix}.fasta
         samtools faidx {params.ref_prefix}.fasta
