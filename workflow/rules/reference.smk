@@ -2,7 +2,7 @@ rule index_reference:
     input:
         reference=config["reference"],
     output:
-        indices = expand("results/reference/{ref_acc}.{ext}", ref_acc=config["ref_acc"], ext=["sa", "pac", "bwt", "ann", "amb"]),
+        indices = expand("{ref_acc}.{ext}", ref_acc=config["ref_acc"], ext=["sa", "pac", "bwt", "ann", "amb"]),
         fai="results/reference.fasta.fai",
     conda:
         "../envs/reference.yaml"
