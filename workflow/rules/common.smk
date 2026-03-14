@@ -95,6 +95,6 @@ def parabricks_output():
         output.append(f"results/fastp_output/{row['sample']}/{row['sample']}_{row['lane']}_R2.fastq.gz")
     output.extend(expand("results/BAMs/{sample}.bam", sample=unique_samples))
     output.extend(expand("results/VCFs/merged_samples.vcf.gz"))
-    output.extend(expand("results/reference/{ref_acc}.{ext}", ref_acc=config["ref_acc"], ext=["sa", "pac", "bwt", "ann", "amb"]))
+    output.extend(expand("{ref_acc}.{ext}", ref_acc=config["ref_acc"], ext=["sa", "pac", "bwt", "ann", "amb","fai"]))
     return output
     
