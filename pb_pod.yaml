@@ -15,7 +15,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: parabricks-snakemake
-          image: docker.io/chabbytmd1/parabricks-snakemake:v0.6
+          image: docker.io/chabbytmd1/parabricks-snakemake:v0.8
           command:
             - "/bin/bash"
             - "-c"
@@ -28,15 +28,15 @@ spec:
               sleep infinity
           resources:
             limits:
-              memory: 64Gi
-              cpu: "4"
-              # Change the number of GPU required (up to 4)
-              nvidia.com/gpu: "1"
+              memory: 128Gi
+              cpu: "12"
+              # Change the number of GPU required (up to 12)
+              nvidia.com/gpu: "2"
             requests:
-              memory: 64Gi
-              cpu: "4"
-              # Change the number of GPU required (up to 4)
-              nvidia.com/gpu: "1"
+              memory: 128Gi
+              cpu: "12"
+              # Change the number of GPU required (up to 12)
+              nvidia.com/gpu: "2"
           volumeMounts:
             - name: data
               mountPath: /data
