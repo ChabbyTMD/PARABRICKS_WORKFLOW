@@ -8,7 +8,7 @@ This workflow is designed to flexibly feed into germline sequence data from one 
 
 ## Quick Start
 
-Pull the latest docker image of the workflow [here](https://hub.docker.com/repository/docker/chabbytmd1/parabricks-snakemake/general)
+Pull the latest docker image of the workflow [here](https://hub.docker.com/r/chabbytmd1/parabricks-snakemake)
 
 The workflow is present in the `/opt/PARABRICKS-WORKFLOW/` location.
 
