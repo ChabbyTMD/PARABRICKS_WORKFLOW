@@ -36,7 +36,6 @@ rule pb_germline:
             --logfile {log} \
             --verbose \
             --memory-limit {resources.memory} \
-            --low-memory \
             --gpusort \
             --gpuwrite \
         """
