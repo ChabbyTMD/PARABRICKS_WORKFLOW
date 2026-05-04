@@ -39,7 +39,6 @@ rule pb_germline:
             --gpusort \
             --gpuwrite \
             --num-gpus 2 \
-            --low-memory
         """
 
 rule vcf_sort_index:
