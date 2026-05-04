@@ -36,7 +36,6 @@ rule pb_germline:
             --logfile {log} \
             --verbose \
             --memory-limit {resources.memory} \
-            --gpusort \
             --gpuwrite \
             --num-gpus 2 \
         """
