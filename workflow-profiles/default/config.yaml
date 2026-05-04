@@ -1,9 +1,9 @@
 use-conda: True
 
-local-cores: 16
+local-cores: 12
 default-resources:
   memory: 128
 
 set-threads:
-  fastp: 16
-  pb_germline: 16
+  fastp: 12
+  pb_germline: 12
