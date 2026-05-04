@@ -2,7 +2,7 @@ use-conda: True
 
 local-cores: 32
 default-resources:
-  memory: 128
+  memory: 256
 
 set-threads:
   fastp: 32
